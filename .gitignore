@@ -1,0 +1,8 @@
+art/*.blend
+art/*.blend1
+dist/assets/ming-draft.png
+dist/assets/ming-closed.png
+dist/assets/ming-open.png
+dist/assets/ming-review.png
+__pycache__/
+*.pyc

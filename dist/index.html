@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111517">
+  <meta name="description" content="Explore Ember Gate, an early-Ming-inspired Chinese fortress in a detailed 2.5D isometric wall scene for Last Bastion.">
+  <title>Last Bastion — Ember Gate</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="preload" as="image" href="./assets/ming-closed.webp">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23121618'/%3E%3Cpath d='M14 14v26l18 12 18-12V14H14m9 0v14h18V14M32 28v24' stroke='%23d7a15e' stroke-width='4' fill='none'/%3E%3C/svg%3E">
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-shield" viewBox="0 0 32 36"><path d="M3 3h26v23L16 34 3 26V3Z M11 3v13h10V3 M16 16v18"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 1v3m0 16v3M1 12h3m16 0h3M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></symbol>
+    <symbol id="i-rain" viewBox="0 0 24 24"><path d="M6 15a4 4 0 1 1 0-8 6 6 0 0 1 11-1 4.5 4.5 0 0 1 1 9M7 18l-1 3m6-3-1 3m6-3-1 3"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3V9Zm13-1c3 2 3 6 0 8m3-11c5 4 5 10 0 14"/></symbol>
+    <symbol id="i-fullscreen" viewBox="0 0 24 24"><path d="M3 9V3h6m6 0h6v6m0 6v6h-6M9 21H3v-6"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 9a8 8 0 1 1 0 6M4 3v6h6"/></symbol>
+    <symbol id="i-gate" viewBox="0 0 24 24"><path d="M3 21V3h18v18M6 21V6h12v15M12 6v15M8 13h2m4 0h2"/></symbol>
+    <symbol id="i-wall" viewBox="0 0 24 24"><path d="M2 4h20v16H2V4Zm0 5h20M2 15h20M8 4v5m8-5v5M6 9v6m8-6v6m-4 0v5m8-5v5"/></symbol>
+    <symbol id="i-tower" viewBox="0 0 24 24"><path d="M6 22V8H3V3h18v5h-3v14M6 8h12M9 3v5m6-5v5M9 22v-7h6v7"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="m14 2-10 12h7l-1 8 10-12h-7l1-8Z"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="m2 5 6-3 8 3 6-3v17l-6 3-8-3-6 3V5Zm6-3v17m8-14v17"/></symbol>
+  </defs></svg>
+
+  <div id="loading"><svg class="loading-logo"><use href="#i-shield"/></svg><p>ESTABLISHING EMBER GATE</p><div><i id="load-progress"></i></div><small>Loading the wall environment</small></div>
+  <div id="scene" tabindex="0" aria-label="Isometric fortress wall. Drag to pan, scroll to zoom. Press E to open or close the gate.">
+    <div id="stage">
+      <img id="closed-art" src="./assets/ming-closed.webp" alt="Detailed isometric early Ming Chinese fortress: gray brick ramparts, tiled timber gatehouse, stone arch, red banners, braziers, and a wooden bridge over a moat" draggable="false">
+      <img id="open-art" src="./assets/ming-open.webp" alt="" draggable="false" aria-hidden="true">
+      <canvas id="scene-effects" width="1672" height="941" aria-hidden="true"></canvas>
+      <svg id="selection-map" viewBox="0 0 1672 941" aria-hidden="true">
+        <defs><pattern id="scan-lines" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M-2 2 2-2M0 8 8 0M6 10 10 6" stroke="#e2b36a" stroke-width=".6" opacity=".3"/></pattern></defs>
+        <path id="selected-outline" d=""/>
+        <path class="hit-region" data-part="west" d=""/>
+        <path class="hit-region" data-part="wall" d=""/>
+        <path class="hit-region" data-part="gate" d=""/>
+        <path class="hit-region" data-part="east" d=""/>
+        <path class="hit-region" data-part="utilities" d=""/>
+        <path class="hit-region" data-part="catwalk" d=""/>
+      </svg>
+      <div id="hotspots">
+        <button class="hotspot" data-part="west" style="left:10.8%;top:12%" aria-label="Inspect west watchtower"><i>01</i><span>WEST WATCHTOWER</span></button>
+        <button class="hotspot" data-part="wall" style="left:26.3%;top:35%" aria-label="Inspect brick rampart"><i>02</i><span>BRICK RAMPART</span></button>
+        <button class="hotspot" data-part="gate" style="left:48%;top:44.5%" aria-label="Inspect timber gate"><i>03</i><span>TIMBER GATE</span></button>
+        <button class="hotspot" data-part="east" style="left:91%;top:61%" aria-label="Inspect east watchtower"><i>04</i><span>EAST WATCHTOWER</span></button>
+        <button class="hotspot" data-part="utilities" style="left:32.4%;top:47.7%" aria-label="Inspect timber gatehouse"><i>05</i><span>GATEHOUSE</span></button>
+        <button class="hotspot" data-part="catwalk" style="left:33%;top:23.8%" aria-label="Inspect moat bridge"><i>06</i><span>MOAT BRIDGE</span></button>
+      </div>
+    </div>
+    <canvas id="weather" aria-hidden="true"></canvas>
+    <div class="scene-vignette"></div>
+  </div>
+
+  <div id="interface">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Last Bastion home"><svg><use href="#i-shield"/></svg><span>LAST <b>BASTION</b><small>HOLD THE LINE.</small></span></a>
+      <div class="chapter"><span>ENVIRONMENT 01</span><i>/</i><strong>EMBER GATE</strong></div>
+      <div class="top-actions"><span class="build-label"><i></i> WALL FOUNDATION</span><button id="sources-button" class="sources-button">Art & sources <span>↗</span></button><button id="help-button" class="square-button" aria-label="Open controls and scene information">?</button></div>
+    </header>
+
+    <div class="scene-heading"><div class="eyebrow"><i></i> CHINA · c. 1400 <span>—</span> EARLY MING</div><h1>EMBER GATE<span>.</span></h1><p>Keep the fire. Hold the wall.</p></div>
+    <div class="environment-controls"><div class="segmented" aria-label="Lighting"><button data-light="dusk" class="active" aria-pressed="true"><svg><use href="#i-sun"/></svg>Dusk</button><button data-light="night" aria-pressed="false"><svg><use href="#i-moon"/></svg>Night</button></div><button id="rain-button" class="environment-button" aria-pressed="false"><svg><use href="#i-rain"/></svg><span>Rain</span></button></div>
+    <div class="camera-tools"><button id="zoom-in" class="square-button" aria-label="Zoom in">+</button><span id="zoom-label">100%</span><button id="zoom-out" class="square-button" aria-label="Zoom out">−</button><div></div><button id="reset-camera" class="square-button" aria-label="Reset camera"><svg><use href="#i-reset"/></svg></button><button id="fullscreen" class="square-button" aria-label="Toggle fullscreen"><svg><use href="#i-fullscreen"/></svg></button></div>
+
+    <div id="selected-tag"><span class="tag-dot"></span><span id="tag-text">EMBER GATE OVERVIEW</span><i></i><span id="selection-count">6 INSPECTION POINTS</span></div>
+
+    <aside id="inspector" class="inspector">
+      <div class="inspector-label"><span>STRUCTURE INSPECTOR</span><span id="part-index">00 / 06</span></div>
+      <div class="inspector-main"><div class="structure-icon"><svg id="part-icon"><use href="#i-shield"/></svg><span id="part-level">TIER I</span></div><div class="structure-copy"><span id="part-class">EARLY MING STRONGHOLD</span><h2 id="part-name">One gate. A thousand nights.</h2><p id="part-description">Gray brick, weathered timber, and a single way through. An early Ming stronghold at the edge of the coming dark.</p></div><div class="structure-stats"><div><span id="stat-a-label">WALL SPAN</span><strong id="stat-a-value">52<small> m</small></strong></div><div><span id="stat-b-label">HEIGHT</span><strong id="stat-b-value">8<small> m</small></strong></div><div><span id="stat-c-label">STRONGPOINTS</span><strong id="stat-c-value">02</strong></div></div><div class="structure-action"><span id="gate-state"><i></i> GATE SECURED</span><button id="gate-button" class="primary"><svg><use href="#i-gate"/></svg><span id="gate-button-label">Open timber gate</span><kbd>E</kbd></button><small id="action-note">Inspect a section to see its details</small></div></div>
+      <nav id="structure-tabs" aria-label="Wall sections"><button data-part="overview" class="active" aria-pressed="true"><svg><use href="#i-map"/></svg><span>Overview</span></button><button data-part="west" aria-pressed="false"><svg><use href="#i-tower"/></svg><span>West tower</span></button><button data-part="wall" aria-pressed="false"><svg><use href="#i-wall"/></svg><span>Rampart</span></button><button data-part="gate" aria-pressed="false"><svg><use href="#i-gate"/></svg><span>Timber gate</span></button><button data-part="east" aria-pressed="false"><svg><use href="#i-tower"/></svg><span>East tower</span></button><button data-part="utilities" aria-pressed="false"><svg><use href="#i-bolt"/></svg><span>Gatehouse</span></button><button data-part="catwalk" aria-pressed="false"><svg><use href="#i-eye"/></svg><span>Bridge</span></button></nav>
+    </aside>
+
+    <footer class="bottom-bar"><div class="view-actions"><button id="markers-button" aria-pressed="false"><svg><use href="#i-eye"/></svg><span>Inspection points</span><kbd>I</kbd></button><button id="clean-view"><svg><use href="#i-fullscreen"/></svg><span>Clean view</span><kbd>H</kbd></button><button id="sound-button" aria-pressed="false" aria-label="Toggle ambient sound"><svg><use href="#i-volume"/></svg><span>Sound off</span></button></div><div class="camera-help"><span>DRAG TO PAN</span><i></i><span>SCROLL TO ZOOM</span></div><span class="scene-type">2.5D ISOMETRIC <i> / </i> WALL STUDY</span></footer>
+  </div>
+  <button id="restore-interface" class="hidden" aria-label="Restore interface">↙ <span>Show interface</span> <kbd>H</kbd></button>
+  <div id="toast" role="status" class="hidden"></div>
+
+  <div id="help-overlay" class="hidden"><section class="help-dialog" role="dialog" aria-modal="true" aria-labelledby="help-title"><button id="close-help" aria-label="Close controls">×</button><div class="eyebrow">LAST BASTION / FIELD MANUAL</div><h2 id="help-title">The night begins<br>at the gate.</h2><p>This first build establishes the fortress wall for the zombie-defense game. Explore its structure and inspect the details before the first wave arrives.</p><div class="help-controls"><div><kbd>Drag</kbd><span>Pan around the wall</span></div><div><kbd>Scroll / + −</kbd><span>Zoom in and out</span></div><div><kbd>E</kbd><span>Open or close the gate</span></div><div><kbd>I</kbd><span>Show inspection points</span></div><div><kbd>H</kbd><span>Hide the interface</span></div><div><kbd>R</kbd><span>Reset the camera</span></div><div><kbd>N</kbd><span>Toggle dusk and night</span></div><div><kbd>W</kbd><span>Toggle rain</span></div></div><p class="help-note">On touchscreens, drag with one finger and pinch to zoom. Select a wall section from the bottom bar to focus it.</p><details><summary>About this build</summary><p>An original 3D environment rendered into a 2.5D isometric scene, with sourced CC0 material textures, modeled ceramic roof tiles, and physically rendered lighting. The wall is the focus of this build; zombie waves and the upgrade economy are not implemented yet. Displayed dimensions are fictional design specifications.</p><a href="./credits.txt" target="_blank" rel="noopener">Full source credits ↗</a></details><button id="back-to-wall" class="primary">Back to the wall <svg><use href="#i-arrow"/></svg></button></section></div>
+  <div id="error" class="hidden"><h2>The wall couldn’t load.</h2><p>Please reload the page to retrieve the environment artwork.</p><button onclick="location.reload()" class="primary">Reload</button></div>
+  <div id="sources-overlay" class="hidden"><section class="help-dialog sources-dialog" role="dialog" aria-modal="true" aria-labelledby="sources-title"><button id="close-sources" aria-label="Close art sources">×</button><div class="eyebrow">THE MAKING OF EMBER GATE</div><h2 id="sources-title">Built from<br>real references.</h2><p>A fictional stronghold in China, around 1400. Nanjing’s early Ming fortifications guide the masonry and gate design; the layout and pavilion are a game interpretation.</p><div class="source-group-label">01 / ARCHITECTURAL REFERENCES</div><a class="source-card" href="https://english.njcitywall.cn/?obj=lishi" target="_blank" rel="noopener"><span class="source-number">南京</span><span><strong>Nanjing City Wall</strong><small>Official history · Built 1366–1393<br>Gate arches, masonry, and moat system</small></span><b>↗</b></a><a class="source-card" href="https://whc.unesco.org/en/tentativelists/5324" target="_blank" rel="noopener"><span class="source-number">02</span><span><strong>Ming & Qing city walls</strong><small>UNESCO Tentative List submission<br>Construction and restoration history</small></span><b>↗</b></a><div class="source-group-label">02 / MATERIALS USED IN THIS SCENE</div><div class="material-grid"><a href="https://polyhaven.com/a/castle_brick_01" target="_blank" rel="noopener"><img src="./assets/material-brick.jpg" alt="Weathered brick material"><strong>Weathered brick ↗</strong><span>Poly Haven · Rob Tuytel · CC0</span></a><a href="https://polyhaven.com/a/cobblestone_floor_04" target="_blank" rel="noopener"><img src="./assets/material-paving.jpg" alt="Worn stone paving material"><strong>Stone paving ↗</strong><span>Poly Haven · Rob Tuytel · CC0</span></a><a href="https://polyhaven.com/a/wood_planks_dirt" target="_blank" rel="noopener"><img src="./assets/material-wood.jpg" alt="Weathered timber material"><strong>Aged timber ↗</strong><span>Poly Haven · Rob Tuytel · CC0</span></a></div><p class="help-note">The wall, gatehouse, curved tile roofs, bridge, and props are original modeled geometry. The material photographs above are the actual CC0 texture maps, color-adjusted in the scene. Historic reference photographs are linked, not republished.</p><a class="text-link" href="./credits.txt" target="_blank" rel="noopener">Read the full credits & production notes ↗</a><button id="sources-back" class="primary">Return to Ember Gate <svg><use href="#i-arrow"/></svg></button></section></div><script src="./app.js" defer></script>
+</body>
+</html>
